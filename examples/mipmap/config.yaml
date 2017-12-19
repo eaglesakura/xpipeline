@@ -1,0 +1,8 @@
+mipmap:
+  requests:
+    - path: android/drawable
+      platform: android
+      type: drawable
+    - path: android/mipmap
+      platform: android
+      type: mipmap
