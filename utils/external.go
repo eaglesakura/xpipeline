@@ -28,6 +28,21 @@ type ExternalCommand struct {
 	Stderr func(stdout string)
 }
 
+/*
+ 実行し、標準入力とエラーを取得する
+*/
+func (it *ExternalCommand) RunStdout() (stdout string, stderr string, err error) {
+	it.Stdout = func(_stdout string) {
+		stdout = _stdout
+	}
+	it.Stderr = func(_stdout string) {
+		stderr = _stdout
+	}
+
+	err = it.Run()
+	return stdout, stderr, err
+}
+
 func (it *ExternalCommand) Run() error {
 	cmd := exec.Command(it.Commands[0], it.Commands[1:]...)
 
