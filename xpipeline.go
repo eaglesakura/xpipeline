@@ -9,14 +9,15 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "xpipeline"
+	app.Description = "Mobile app build pipeline utils"
 	app.Version = "0.0"
 
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:  "config",
-			Usage: "`project.[yaml|yml]` path.",
-		},
-	}
+	//app.Flags = []cli.Flag{
+	//	cli.StringFlag{
+	//		Name:  "config",
+	//		Usage: "`project.[yaml|yml]` path.",
+	//	},
+	//}
 	app.Commands = []cli.Command{
 		{
 			Name: "mipmap",
