@@ -15,4 +15,5 @@ func TestParseConfigure(t *testing.T) {
 	assert.NotEqual(t, cfg.Mipmap.Requests[0].Path, "")
 	assert.NotEqual(t, cfg.Mipmap.Requests[0].Platform, "")
 	assert.NotEqual(t, cfg.Mipmap.Requests[0].Type, "")
+	assert.NotEqual(t, cfg.Mipmap.Requests[0].OutputPath, "")
 }

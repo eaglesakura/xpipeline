@@ -3,6 +3,16 @@ mipmap:
     - path: android/drawable
       platform: android
       type: drawable
+      outpath: dst/Resources
+      format: png
+      convert_args:
+        - "-quality"
+        - "100"
     - path: android/mipmap
       platform: android
       type: mipmap
+      outpath: ../dst/Resources
+      format: jpg
+      convert_args:
+        - "-quality"
+        - "50"

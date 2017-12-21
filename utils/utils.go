@@ -4,6 +4,7 @@ import (
 	"github.com/go-yaml/yaml"
 	"io/ioutil"
 	"strconv"
+	"os"
 )
 
 /*
@@ -24,4 +25,33 @@ func Atoi(ascii string) int {
 	} else {
 		return result
 	}
+}
+
+/*
+ 指定パスに存在するディレクトリ一覧を取得する
+*/
+func ListDirectories(path string) []os.FileInfo {
+	files, _ := ioutil.ReadDir(path)
+	var result []os.FileInfo
+
+	for _, info := range files {
+		if info.IsDir() {
+			result = append(result, info)
+		}
+	}
+	return result
+}
+
+/*
+ 指定パスに存在するディレクトリ一覧を取得する
+*/
+func ListFiles(path string) []os.FileInfo {
+	files, _ := ioutil.ReadDir(path)
+	var result []os.FileInfo
+	for _, info := range files {
+		if !info.IsDir() {
+			result = append(result, info)
+		}
+	}
+	return result
 }

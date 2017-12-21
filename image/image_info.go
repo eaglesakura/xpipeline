@@ -21,7 +21,7 @@ type ImageInfo struct {
 /*
  画像情報を読み込む
 */
-func LoadImageInfo(path string) (*ImageInfo, error) {
+func NewImageInstance(path string) (*ImageInfo, error) {
 	//if currentDir, _ := os.Getwd(); currentDir != "" {
 	//	path = currentDir + "/" + path
 	//}
@@ -37,6 +37,7 @@ func LoadImageInfo(path string) (*ImageInfo, error) {
 	if info, errInfo, err := cmd.RunStdout(); err != nil {
 		return nil, errors.New(fmt.Sprintf("%v / %v", err, errInfo))
 	} else {
+		// example) 256,256,PNG,srgba
 		infoList := strings.Split(info, ",")
 		//fmt.Printf("Image[%v] Check[%v]", path, info)
 		return &ImageInfo{

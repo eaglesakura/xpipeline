@@ -6,7 +6,7 @@ import (
 )
 
 func TestLoadImageInfo_png_rgba(t *testing.T) {
-	info, e := LoadImageInfo("../examples/image/128x128-rgba.png")
+	info, e := NewImageInstance("../examples/image/128x128-rgba.png")
 	assert.NoError(t, e)
 	assert.NotNil(t, info)
 
@@ -17,7 +17,7 @@ func TestLoadImageInfo_png_rgba(t *testing.T) {
 }
 
 func TestLoadImageInfo_png_rgb(t *testing.T) {
-	info, e := LoadImageInfo("../examples/image/128x128-rgb.png")
+	info, e := NewImageInstance("../examples/image/128x128-rgb.png")
 	assert.NoError(t, e)
 	assert.NotNil(t, info)
 
@@ -28,7 +28,7 @@ func TestLoadImageInfo_png_rgb(t *testing.T) {
 }
 
 func TestLoadImageInfo_jpeg(t *testing.T) {
-	info, e := LoadImageInfo("../examples/image/128x128-rgb.jpg")
+	info, e := NewImageInstance("../examples/image/128x128-rgb.jpg")
 	assert.NoError(t, e)
 	assert.NotNil(t, info)
 
