@@ -1,7 +1,6 @@
-package image
+package main
 
 import (
-	"../utils"
 	"fmt"
 	"errors"
 	"strings"
@@ -21,12 +20,12 @@ type ImageInfo struct {
 /*
  画像情報を読み込む
 */
-func NewImageInstance(path string) (*ImageInfo, error) {
+func LoadImageInfo(path string) (*ImageInfo, error) {
 	//if currentDir, _ := os.Getwd(); currentDir != "" {
 	//	path = currentDir + "/" + path
 	//}
 
-	cmd := &utils.ExternalCommand{
+	cmd := &Shell{
 		Commands: []string{
 			"identify",
 			"-format", "%w,%h,%m,%[channels]",
@@ -42,8 +41,8 @@ func NewImageInstance(path string) (*ImageInfo, error) {
 		//fmt.Printf("Image[%v] Check[%v]", path, info)
 		return &ImageInfo{
 			Path:     path,
-			Width:    utils.Atoi(infoList[0]),
-			Height:   utils.Atoi(infoList[1]),
+			Width:    Atoi(infoList[0]),
+			Height:   Atoi(infoList[1]),
 			Format:   infoList[2],
 			Channels: infoList[3],
 		}, nil

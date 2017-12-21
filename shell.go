@@ -1,4 +1,4 @@
-package utils
+package main
 
 import (
 	"bufio"
@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-type ExternalCommand struct {
+type Shell struct {
 	/**
 	 * カレントディレクトリ
 	 */
@@ -31,7 +31,7 @@ type ExternalCommand struct {
 /*
  実行し、標準入力とエラーを取得する
 */
-func (it *ExternalCommand) RunStdout() (stdout string, stderr string, err error) {
+func (it *Shell) RunStdout() (stdout string, stderr string, err error) {
 	it.Stdout = func(_stdout string) {
 		stdout = _stdout
 	}
@@ -43,7 +43,7 @@ func (it *ExternalCommand) RunStdout() (stdout string, stderr string, err error)
 	return stdout, stderr, err
 }
 
-func (it *ExternalCommand) Run() error {
+func (it *Shell) Run() error {
 	cmd := exec.Command(it.Commands[0], it.Commands[1:]...)
 
 	if it.Chdir != "" {

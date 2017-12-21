@@ -1,4 +1,4 @@
-package utils
+package main
 
 import (
 	"testing"
@@ -6,9 +6,6 @@ import (
 )
 
 func TestListDirectories(t *testing.T) {
-	_gopath := ListDirectories("../.gopath")
+	_gopath := ListDirectories(".gopath")
 	assert.Equal(t, len(_gopath), 2)
-
-	utils := ListDirectories(".")
-	assert.Equal(t, len(utils), 0)
 }

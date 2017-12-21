@@ -1,8 +1,6 @@
-package mipmap
+package main
 
 import (
-	"../utils"
-	"../image"
 	"errors"
 	"github.com/urfave/cli"
 	"strings"
@@ -10,35 +8,35 @@ import (
 	"os"
 )
 
-var _DPI_TABLE = []*image.DotPerInch{
-	&image.DotPerInch{Name: "ldpi"},
-	&image.DotPerInch{Name: "mdpi"},
-	&image.DotPerInch{Name: "hdpi"},
-	&image.DotPerInch{Name: "xhdpi"},
-	&image.DotPerInch{Name: "xxhdpi"},
-	&image.DotPerInch{Name: "xxxhdpi"},
+var _DPI_TABLE = []*DotPerInch{
+	{Name: "ldpi"},
+	{Name: "mdpi"},
+	{Name: "hdpi"},
+	{Name: "xhdpi"},
+	{Name: "xxhdpi"},
+	{Name: "xxxhdpi"},
 }
 
 //
 // 画像のMipmap処理を行う
 // リサイズのみを担当し、webp等への変換は担当しない
 //
-type Task struct {
+type MipmapTask struct {
 	ctx *cli.Context // CommandLine Context
 
 	configDirectory string // config.yaml が格納されているディレクトリ, "/"は含まない
 	config          Configure
 }
 
-func NewInstance(ctx *cli.Context) (*Task, error) {
-	result := &Task{
+func newMipmapTask(ctx *cli.Context) (*MipmapTask, error) {
+	result := &MipmapTask{
 	}
 
 	if configFile := ctx.String("config"); configFile == "" {
 		return nil, errors.New("-config path/to/config.yaml")
 	} else {
 		// load config
-		if parseError := utils.ParseYamlFromFile(configFile, &result.config); parseError != nil {
+		if parseError := ParseYamlFromFile(configFile, &result.config); parseError != nil {
 			return nil, parseError
 		}
 
@@ -54,10 +52,10 @@ func NewInstance(ctx *cli.Context) (*Task, error) {
 /*
  処理対象のdpi一覧を取得する
 */
-func (it *Task) getDpiList(path string) []*image.DotPerInch {
-	var result []*image.DotPerInch
-	for _, dir := range utils.ListDirectories(it.configDirectory + "/" + path) {
-		result = append(result, &image.DotPerInch{
+func (it *MipmapTask) getDpiList(path string) []*DotPerInch {
+	var result []*DotPerInch
+	for _, dir := range ListDirectories(it.configDirectory + "/" + path) {
+		result = append(result, &DotPerInch{
 			Name: dir.Name(),
 		})
 	}
@@ -67,7 +65,7 @@ func (it *Task) getDpiList(path string) []*image.DotPerInch {
 /*
  1ファイル単位でmipmapを生成する
 */
-func (it *Task) generateMipmap(srcDpi *image.DotPerInch, src os.FileInfo, outputPath string, request Request) error {
+func (it *MipmapTask) generateMipmap(srcDpi *DotPerInch, src os.FileInfo, outputPath string, request Request) error {
 
 	// 出力ファイル名を決定する
 	dstFileName := src.Name()
@@ -79,7 +77,7 @@ func (it *Task) generateMipmap(srcDpi *image.DotPerInch, src os.FileInfo, output
 	srcFilePath := it.configDirectory + "/" + request.Path + "/" + srcDpi.Name + "/" + src.Name()
 
 	// 画像情報
-	info, err := image.NewImageInstance(srcFilePath)
+	info, err := LoadImageInfo(srcFilePath)
 	if err != nil {
 		return err
 	}
@@ -106,7 +104,7 @@ func (it *Task) generateMipmap(srcDpi *image.DotPerInch, src os.FileInfo, output
 		}
 
 		fmt.Printf("  * %v[%vx%v] %v \n", dstDpi.Name, dstWidth, dstHeight, dstFilePath)
-		cmd := &utils.ExternalCommand{
+		cmd := &Shell{
 			Commands: []string{
 				"convert", srcFilePath,
 			},
@@ -136,7 +134,7 @@ func (it *Task) generateMipmap(srcDpi *image.DotPerInch, src os.FileInfo, output
 /*
  1リクエストを処理する
 */
-func (it *Task) executeAndroid(request Request) error {
+func (it *MipmapTask) executeAndroid(request Request) error {
 	// 出力先ディレクトリを作成する
 	outputDirectoryPath := it.configDirectory + "/" + request.OutputPath
 	os.MkdirAll(outputDirectoryPath, os.ModePerm)
@@ -145,7 +143,7 @@ func (it *Task) executeAndroid(request Request) error {
 	for _, dpi := range it.getDpiList(request.Path) {
 		// dpi内部のファイルを列挙する
 		path := it.configDirectory + "/" + request.Path + "/" + dpi.Name
-		for _, srcFile := range utils.ListFiles(path) {
+		for _, srcFile := range ListFiles(path) {
 			// 1ファイルの生成を行う
 			if err := it.generateMipmap(dpi, srcFile, outputDirectoryPath, request); err != nil {
 				return err
@@ -156,7 +154,7 @@ func (it *Task) executeAndroid(request Request) error {
 	return nil
 }
 
-func (it *Task) Execute() {
+func (it *MipmapTask) Execute() {
 	for _, req := range it.config.Mipmap.Requests {
 		if req.Platform == "android" {
 			err := it.executeAndroid(req)

@@ -1,7 +1,6 @@
-package mipmap
+package main
 
 import (
-	"../utils"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -10,7 +9,7 @@ import (
 func TestParseConfigure(t *testing.T) {
 	cfg := Configure{}
 
-	assert.NoError(t, utils.ParseYamlFromFile("../examples/mipmap/config.yaml", &cfg))
+	assert.NoError(t, ParseYamlFromFile("examples/mipmap/config.yaml", &cfg))
 
 	assert.NotEqual(t, cfg.Mipmap.Requests[0].Path, "")
 	assert.NotEqual(t, cfg.Mipmap.Requests[0].Platform, "")
