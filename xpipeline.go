@@ -9,8 +9,8 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "xpipeline"
-	app.Description = "Mobile app build pipeline utils"
-	app.Version = "0.1"
+	app.Usage = "Mobile app build pipeline utils"
+	app.Version = "0.2"
 
 	//app.Flags = []cli.Flag{
 	//	cli.StringFlag{
