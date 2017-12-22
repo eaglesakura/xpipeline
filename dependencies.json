@@ -1,0 +1,29 @@
+{
+  "Repositories": [
+    {
+      "ImportPath": "github.com/ghodss/yaml",
+      "Rev": "0ca9ea5df5451ffdf184b4428c902747c2c11cd7",
+      "Lang": "golang"
+    },
+    {
+      "ImportPath": "github.com/go-yaml/yaml",
+      "Rev": "287cf08546ab5e7e37d55a84f7ed3fd1db036de5",
+      "Lang": "golang"
+    },
+    {
+      "ImportPath": "github.com/stretchr/testify",
+      "Rev": "2aa2c176b9dab406a6970f6a55f513e8a8c8b18f",
+      "Lang": "golang"
+    },
+    {
+      "ImportPath": "github.com/urfave/cli",
+      "Rev": "39908eb08fee7c10d842622a114a5c133fb0a3c6",
+      "Lang": "golang"
+    },
+    {
+      "ImportPath": "gopkg.in/yaml.v2",
+      "Rev": "287cf08546ab5e7e37d55a84f7ed3fd1db036de5",
+      "Lang": "golang"
+    }
+  ]
+}
