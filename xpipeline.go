@@ -52,7 +52,7 @@ func main() {
 				},
 				cli.StringFlag{
 					Name:  "output",
-					Usage: "path/to/output.json",
+					Usage: "[option] path/to/output.json",
 				},
 			},
 		},

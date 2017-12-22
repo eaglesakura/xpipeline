@@ -23,11 +23,8 @@ func newYaml2JsonTask(ctx *cli.Context) (*Yaml2JsonTask, error) {
 	if source == "" {
 		return nil, errors.New("-input \"path/to/input.[yaml|yml]\"")
 	}
-	output := ctx.String("output")
-	if output == "" {
-		return nil, errors.New("-output \"path/to/output.json\"")
-	}
 
+	output := ctx.String("output")
 	return &Yaml2JsonTask{
 		ctx:     ctx,
 		srcPath: source,
@@ -48,12 +45,17 @@ func (it *Yaml2JsonTask) Execute() {
 		return
 	}
 
-	os.MkdirAll(it.dstPath[0:strings.LastIndex(it.dstPath, "/")], os.ModePerm)
-	err = ioutil.WriteFile(it.dstPath, jsonBytes, os.ModePerm)
-	if err != nil {
-		fmt.Errorf("%v\n", err)
-		return
+	if it.dstPath == "" {
+		// 標準出力に出力しておしまい
+		fmt.Print(string(jsonBytes))
+	} else {
+		// ファイルとして書き出す
+		os.MkdirAll(it.dstPath[0:strings.LastIndex(it.dstPath, "/")], os.ModePerm)
+		err = ioutil.WriteFile(it.dstPath, jsonBytes, os.ModePerm)
+		if err != nil {
+			fmt.Errorf("%v\n", err)
+			return
+		}
+		fmt.Printf("%v[%v bytes] -> %v[%v bytes]", it.srcPath, len(yamlBytes), it.dstPath, len(jsonBytes))
 	}
-	fmt.Printf("%v[%v bytes] -> %v[%v bytes]", it.srcPath, len(yamlBytes), it.dstPath, len(jsonBytes))
-
 }
