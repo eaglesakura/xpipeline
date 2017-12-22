@@ -10,7 +10,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "xpipeline"
 	app.Usage = "Mobile app build pipeline utils"
-	app.Version = "0.2"
+	app.Version = "0.3"
 
 	//app.Flags = []cli.Flag{
 	//	cli.StringFlag{
