@@ -55,3 +55,32 @@ func ListFiles(path string) []os.FileInfo {
 	}
 	return result
 }
+
+/*
+ 一時ファイルの格納パスを取得する
+*/
+func GetTempFilePath(path string) string {
+	return ".xpipeline/temp/" + path
+}
+
+/*
+ 一時ファイル格納パスを生成する
+*/
+func NewTempFileDirectory() {
+	os.MkdirAll(".xpipeline/temp", os.ModePerm)
+	ioutil.WriteFile(".xpipeline/temp/.gitignore", []byte(`
+*.bin
+*.json
+*.yaml
+*.dat
+*.db
+`), os.ModePerm)
+
+}
+
+/*
+ 一時ファイルを削除する
+*/
+func DeleteTempFiles() {
+	os.RemoveAll(".xpipeline/temp")
+}

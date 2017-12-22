@@ -7,6 +7,10 @@ import (
 )
 
 func main() {
+	NewTempFileDirectory()
+	defer func() {
+		DeleteTempFiles()
+	}()
 	app := cli.NewApp()
 	app.Name = "xpipeline"
 	app.Usage = "Mobile app build pipeline utils"

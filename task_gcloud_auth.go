@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 )
 
 type GcloudServiceAccount struct {
@@ -19,16 +20,25 @@ type GcloudServiceAccount struct {
 type GcloudAuthTask struct {
 	ctx *cli.Context
 
-	serviceAccountPath string
-	serviceAccount     *GcloudServiceAccount
+	serviceAccountPath      string
+	serviceAccountFileBytes []byte
+	serviceAccount          *GcloudServiceAccount
 }
 
 func newGcloudAuthTask(ctx *cli.Context) (*GcloudAuthTask, error) {
 
 	serviceAccountPath := ctx.String("key-file")
-	serviceAccountFileBytes, err := ioutil.ReadFile(serviceAccountPath)
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("%v load failed[err:%v]", serviceAccountPath, err))
+	var serviceAccountFileBytes []byte
+	if serviceAccountPath == "" {
+		// 標準入力から取得する
+		serviceAccountFileBytes, _ = ioutil.ReadAll(os.Stdin)
+	} else {
+		// ファイルからロードする
+		bytes, err := ioutil.ReadFile(serviceAccountPath)
+		if err != nil {
+			return nil, errors.New(fmt.Sprintf("%v load failed[err:%v]", serviceAccountPath, err))
+		}
+		serviceAccountFileBytes = bytes
 	}
 	serviceAccount := &GcloudServiceAccount{}
 
@@ -38,13 +48,22 @@ func newGcloudAuthTask(ctx *cli.Context) (*GcloudAuthTask, error) {
 	}
 
 	return &GcloudAuthTask{
-		ctx:                ctx,
-		serviceAccountPath: serviceAccountPath,
-		serviceAccount:     serviceAccount,
+		ctx:                     ctx,
+		serviceAccountPath:      serviceAccountPath,
+		serviceAccountFileBytes: serviceAccountFileBytes,
+		serviceAccount:          serviceAccount,
 	}, nil
 }
 
 func (it *GcloudAuthTask) Execute() {
+
+	if it.serviceAccountPath == "" {
+		// 一時ファイルに書き出す
+		path := GetTempFilePath("temp.bin")
+		ioutil.WriteFile(path, it.serviceAccountFileBytes, os.ModePerm)
+		it.serviceAccountPath = path
+	}
+
 	// 認証
 	{
 		shell := &Shell{
@@ -89,4 +108,9 @@ func (it *GcloudAuthTask) Execute() {
 			return
 		}
 	}
+
+	fmt.Printf("gcloud auth\n")
+	fmt.Printf("   * project-id   %v\n", it.serviceAccount.ProjectId)
+	fmt.Printf("   * client-email %v\n", it.serviceAccount.ClientEmail)
+
 }

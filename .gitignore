@@ -24,3 +24,4 @@ out/
 /repo/*.json
 firebase-admin.json
 deploy/deploy.yaml
+/.xpipeline
