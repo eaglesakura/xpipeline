@@ -56,6 +56,16 @@ func main() {
 				},
 			},
 		},
+		{
+			Name: "docker-path",
+			Action: func(context *cli.Context) {
+				if task, err := newDockerPathTask(context); err != nil {
+					fmt.Errorf("%v\n", err)
+				} else {
+					task.Execute()
+				}
+			},
+		},
 	}
 	app.Run(os.Args)
 }
