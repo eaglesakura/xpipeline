@@ -10,7 +10,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "xpipeline"
 	app.Description = "Mobile app build pipeline utils"
-	app.Version = "0.0"
+	app.Version = "0.1"
 
 	//app.Flags = []cli.Flag{
 	//	cli.StringFlag{
@@ -23,7 +23,7 @@ func main() {
 			Name: "mipmap",
 			Action: func(ctx *cli.Context) {
 				if task, err := newMipmapTask(ctx); err != nil {
-					fmt.Printf("task error[%v]", err)
+					fmt.Errorf("%v\n", err)
 				} else {
 					task.Execute()
 				}
@@ -33,6 +33,26 @@ func main() {
 				cli.StringFlag{
 					Name:  "config",
 					Usage: "mipmap.[yaml|yml] path",
+				},
+			},
+		},
+		{
+			Name: "yaml2json",
+			Action: func(context *cli.Context) {
+				if task, err := newYaml2JsonTask(context); err != nil {
+					fmt.Errorf("%v\n", err)
+				} else {
+					task.Execute()
+				}
+			},
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "input",
+					Usage: "path/to/input.[yaml|yml]",
+				},
+				cli.StringFlag{
+					Name:  "output",
+					Usage: "path/to/output.json",
 				},
 			},
 		},
