@@ -10,7 +10,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "xpipeline"
 	app.Usage = "Mobile app build pipeline utils"
-	app.Version = "0.3"
+	app.Version = "0.4"
 
 	//app.Flags = []cli.Flag{
 	//	cli.StringFlag{
@@ -64,6 +64,23 @@ func main() {
 				} else {
 					task.Execute()
 				}
+			},
+		},
+		{
+			Name: "gcloud-auth",
+			Action: func(context *cli.Context) {
+				if task, err := newGcloudAuthTask(context); err != nil {
+					fmt.Errorf("%v\n", err)
+				} else {
+					task.Execute()
+				}
+			},
+
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "key-file",
+					Usage: "path/to/service-account.json",
+				},
 			},
 		},
 	}
